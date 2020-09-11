@@ -1,76 +1,44 @@
 #include<iostream>
 #include <SFML/Graphics.hpp>
 
+#include "Inputs.hh"
+
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-#define GAME_NAME "Roguelike Game"
+#define GAME_NAME "Roguelike game"
 
 int main()
 {
-    /*sf::RenderWindow window(sf::VideoMode(800, 600), "Platform Game");
-    sf::Event event;
-    while(window.isOpen())
-    {
-       
-    }*/
-
-    //Esto es la ventana de mi grafico
+    //esto es la ventana de tu grafico
     sf::Window* window = new sf::Window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), GAME_NAME);
-    //Guardar eventos dentro de mi ventana, mouse, teclado, etc
+    //aqui vas a guardar los eventos dentro de la ventana, eje: teclado, mouse, etc.
     sf::Event event;
-    //Loop principal, mientras la ventana este abierta, esto se va a ejecutar
+
+    Inputs* inputs = new Inputs();
+
+    //esto es el loop principal, mientras la ventana este abierta, esto se va ejecutar.
     while (window->isOpen())
     {
-        //Mientras se ejecute, esto se va a repetir
+        //mientras se esten ejecutando eventos dentro de la ventana, esto se va repetir eje: teclado, joystick, mouse, etc
         while (window->pollEvent(event))
         {
-            //Cerrar ventana
+            //si el evento fue la acción de cerrar la ventana, entonces termina la aplicación.
             if(event.type == sf::Event::Closed)
             {
                 window->close();
             }
         }
+        
+        Vec2* keyboardAxis{inputs->GetKeyboardAxis()};
+        Vec2* joystickAxis{inputs->GetJoystickAxis()};
+        //std::cout << "keyboard axis x: " << keyboardAxis->x << " keyboard axis y: " << keyboardAxis->y << std::endl;
+        
+        std::cout << "joystic axis x: " << joystickAxis->x << " joystic axis y: " << joystickAxis->y << std::endl;
 
-              if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-        {
-            std::cout << "left" << std::endl;
-        }
-     //la clase Keyboard trae la inputs del teclado
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-        {
-            std::cout << "left" << std::endl;
-        }
-         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-        {
-            std::cout << "right" << std::endl;
-        }
-         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-        {
-            std::cout << "up" << std::endl;
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-        {
-            std::cout << "down" << std::endl;
-        }
-
-        //Hay un control conectado
-        if(sf::Joystick::isConnected(0)) //Busca el conectado numero 0 en la lista
-        {
-            //Cachamos el valor del axis X y Y, lo dividimos entre 100, porque el valor minimo de los axis es -100 y maximo 100
-            //Escala de 1
-            float x{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) / 100};
-            float y{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y) / 100};
-
-            // ? = si es verdadero; y : = si es falso
-            //El control por si solo nunca deja de mandar valores aunque no lo estes tocando, envia datos
-            //Por eso se crean filtros de las entradas de este
-            //En este caso el espectro de menor a -0.2 y mayor a 0.2 es el valor 1
-            x = x > 0.2f ? 1 : x < -0.2f ? -1 : 0;
-            y = -(y > 0.2f ? 1 : y < -0.2f ? -1 : 0);
-
-            std::cout << "X: " << x << " Y: " << y << std::endl;
-        }
+        //inputs->GetJoystickAxis();
+        delete keyboardAxis;
+        delete joystickAxis;
     }
-
+    
     return 0;
 }
