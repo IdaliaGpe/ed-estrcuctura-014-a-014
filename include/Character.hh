@@ -17,6 +17,8 @@ class Character
     public:
         Character(sf::Texture*&, float, float, float, float, float, float);
         ~Character();
+
         sf::Sprite* GetSprite() const;
+        
         void FlipSpriteX(float);
 };

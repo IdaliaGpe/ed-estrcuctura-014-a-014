@@ -3,11 +3,13 @@
 
 #include "Inputs.hh"
 #include "Character.hh"
+#include "Animation.hh"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 #define GAME_NAME "Roguelike game"
 #define TILES1 "assets/sprites/title.png"
+#define TILES2 "assets/sprites/tiles3.png"
 #define SPRITE_SCALE 4.f
 #define FPS 120
 #define PLAYER_MOVESPEED 0.2f
@@ -29,7 +31,11 @@ int main()
     sf::Texture* tilesTexture1{new sf::Texture()};
     tilesTexture1->loadFromFile(TILES1);
 
-    Character* character1{new Character(tilesTexture1, 16 * 10, 16 * 9, 16, 16, SPRITE_SCALE, SPRITE_SCALE)};
+    sf::Texture* tilesTexture2{new sf::Texture()};
+    tilesTexture2->loadFromFile(TILES2);
+
+    Character* character1{new Character(tilesTexture2, 16 * 1, 16 * 5, 16, 16, SPRITE_SCALE, SPRITE_SCALE)};
+    Animation* idle{new Animation(0, 5, character1->GetSprite(), 40.f)};
 
     /*sf::RectangleShape* boxShape{new sf::RectangleShape(*(new sf::Vector2f(100, 100)))};
     boxShape->setPosition((WINDOW_WIDTH / 2), WINDOW_HEIGHT / 2);
@@ -69,7 +75,9 @@ int main()
             character1->FlipSpriteX(keyboardAxis->x);
         }
 
-        window->clear(sf::Color::White);//lipiar la pantalla
+        idle->Play(deltaTime);
+
+        window->clear(*(new sf::Color(150, 100, 0, 255)));//lipiar la pantalla
 
         window->draw(*character1->GetSprite());
         window->display(); //mostrar en pantalla lo que se va dibujar
