@@ -25,9 +25,7 @@ sf::Sprite* Character::GetSprite() const
 
 void Character::FlipSpriteX(float x)
 {
-    //float currentScaleX{x > 0 ? scaleX : x < 0 ? -scaleX : sprite->getScale().x};
-    
-    if(x > 0)
+    if( x > 0)
     {
         sprite->setScale(scaleX, scaleY);
         sprite->setOrigin(0.f, 0.f);
@@ -37,6 +35,16 @@ void Character::FlipSpriteX(float x)
         sprite->setScale(-scaleX, scaleY);
         sprite->setOrigin(sprite->getGlobalBounds().width / scaleX, 0.f);
     }
+}
+
+void Character::SetAnimations(Animation** animations)
+{
+    this->animations = animations;
+}
+
+Animation* Character::GetAnimation(int index) const
+{
+    return *(animations + index);
 }
 
 Character::~Character(){}

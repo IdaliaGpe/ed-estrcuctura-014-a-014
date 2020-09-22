@@ -2,8 +2,9 @@
 #include<iostream>
 
 //constructor
-Animation::Animation(int startFrame, int endFrame, sf::Sprite* sprite, float delay)
+Animation::Animation(int cropPosY, int startFrame, int endFrame, sf::Sprite* sprite, float delay)
 {
+    this->cropPosY = cropPosY;
     this->startFrame = startFrame;
     this->endFrame = endFrame;
     this->sprite = sprite;
@@ -30,9 +31,10 @@ void Animation::Play(float& deltaTime)
         
         sprite->setTextureRect(*(new sf::IntRect( 
             sprite->getTextureRect().width * currentFrame, 
-            sprite->getTextureRect().top,  
+            sprite->getTextureRect().height * cropPosY,  
             sprite->getTextureRect().width,  
-            sprite->getTextureRect().height)));   
+            sprite->getTextureRect().height)));
+               
         timer = 0.f;
     }
 }

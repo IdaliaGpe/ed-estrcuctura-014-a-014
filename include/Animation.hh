@@ -3,15 +3,15 @@
 class Animation
 {
     private:
+        int cropPosY;
         int startFrame;
         int endFrame;
         sf::Sprite* sprite;
         float delay;
         int currentFrame;
         float timer{};
-        float width{};
     public:
-        Animation(int, int, sf::Sprite*, float);
+        Animation(int, int, int, sf::Sprite*, float);
         ~Animation();
         void Play(float&);
 };

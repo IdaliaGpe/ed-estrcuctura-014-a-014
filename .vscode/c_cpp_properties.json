@@ -9,8 +9,7 @@
                 "${workspaceFolder}/include/Graphics",
                 "${workspaceFolder}/include/Network",
                 "${workspaceFolder}/include/System",
-                "${workspaceFolder}/include/Window",
-                "${workspaceFolder}/include/Inputs"
+                "${workspaceFolder}/include/Window"
             ],
             "defines": [
                 "_DEBUG",
