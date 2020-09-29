@@ -1,5 +1,6 @@
 #include<iostream>
 #include <SFML/Graphics.hpp>
+#include <box2d/box2d.h>
 
 #include "Inputs.hh"
 #include "Character.hh"
@@ -76,6 +77,18 @@ int main()
 
     sf::Sprite* tileGround_3_6{new sf::Sprite(*tilesTexture3, *(new sf::IntRect(16 * 3, 16 * 6, 16, 16)))};
     tileGround_3_6->setScale(SPRITE_SCALE, SPRITE_SCALE);
+
+    //Items
+    sf::Sprite* boxSprite{new sf::Sprite(*tilesTexture3, *(new sf::IntRect(16 * 19, 16 * 16, 16, 16)))};
+
+    sf::Sprite* boxSprite1{new sf::Sprite(*tilesTexture3, *(new sf::IntRect(16 * 19, 16 * 19, 16, 16)))};
+    boxSprite1->setScale(SPRITE_SCALE, SPRITE_SCALE);
+    boxSprite1->setPosition(300, 250);
+
+    BoxCollider* BoxCollider1 = new BoxCollider(400, 300, new sf::Color(0, 255, 0, 255), 16, 16);
+    BoxCollider1->GetBoxShape()->setScale(SPRITE_SCALE, SPRITE_SCALE);
+
+    BoxCollider1->GetBoxShape()->setPosition(boxSprite1->getPosition());
 
     //w = tileWall_1_1  q = tileWall_1_2    e =  tileWall_1_3   
 
@@ -170,9 +183,33 @@ int main()
     BoxCollider* character1Collider = new BoxCollider(400, 300, new sf::Color(0, 255, 0, 255), 16, 16);
     character1Collider->GetBoxShape()->setScale(SPRITE_SCALE, SPRITE_SCALE);
 
+    //Physics Declarection
+    b2Vec2* gravity{new b2Vec2(0, 9.8f)};
+    b2World* world{new b2World(*gravity)};
+
+    //PlayerPhysics
+    b2BodyDef* playerBodyDef{new b2BodyDef()};
+    playerBodyDef->type = b2BodyType::b2_dynamicBody;
+    playerBodyDef->position = *(new b2Vec2(character1->GetSprite()->getPosition().x, character1->GetSprite()->getPosition().y));
+
+    b2Body* playerBody = world->CreateBody(playerBodyDef);
+    b2PolygonShape* playerPolygonShape{new b2PolygonShape()};
+    playerPolygonShape->SetAsBox(tileBaseWidth / 2, tileBaseHeight / 2); //la X debe ser la mitad y la Y también debe ser la mitad
+
+    b2FixtureDef* playerFixtureDef{new b2FixtureDef()};
+    playerFixtureDef->shape = playerPolygonShape;
+    playerFixtureDef->density = 1; // cuanto se va resistir a traspasar cosas?
+    playerFixtureDef->friction = 0; // cuanto se va resistir a moverse?
+    playerFixtureDef->restitution = 0; // cuanto va rebotar?
+
+    b2Fixture* playerFixture = playerBody->CreateFixture(playerFixtureDef);
+
     //esto es el loop principal, mientras la ventana este abierta, esto se va ejecutar.
     while (window->isOpen())
     {
+        world->ClearForces();
+        world->Step(1000 / deltaTime, 8, 8);
+
         //mientras se esten ejecutando eventos dentro de la ventana, esto se va repetir eje: teclado, joystick, mouse, etc
         while (window->pollEvent(event))
         {
@@ -219,6 +256,8 @@ int main()
                 character1->GetAnimation(0)->Play(deltaTime);
             }
         }
+        
+        character1->GetSprite()->setPosition(playerBody->GetPosition().x, playerBody->GetPosition().y);
 
         window->clear(*(new sf::Color(150, 100, 0, 255)));//lipiar la pantalla
 
@@ -231,6 +270,10 @@ int main()
         
         window->draw(*character1->GetSprite());
         window->draw(*character1Collider->GetBoxShape());
+        window->draw(*boxSprite);
+        window->draw(*boxSprite1);
+        window->draw(*BoxCollider1->GetBoxShape());
+
         window->display(); //mostrar en pantalla lo que se va dibujar
 
         sf::Time timeElapsed = clock->getElapsedTime();
