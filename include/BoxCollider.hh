@@ -1,4 +1,5 @@
-#include <SFML/Graphics.hpp>
+#include<SFML/Graphics.hpp>
+#include "Rigidbody.hh"
 
 class BoxCollider
 {
@@ -9,13 +10,18 @@ class BoxCollider
         sf::Color* borderColor;
         float width;
         float height;
+        Rigidbody* rigidbody;
 
         void InitShape();
         
     public:
-        BoxCollider(float, float, sf::Color*, float, float);
+        BoxCollider(float, float, sf::Color*, float, float, Rigidbody*);
         ~BoxCollider();
 
         sf::RectangleShape* GetBoxShape() const;
+
+        void UpdatePhysics();
+
+        b2Vec2 GetBodyPosition() const;
 };
 
