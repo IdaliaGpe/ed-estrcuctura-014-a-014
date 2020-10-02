@@ -4,7 +4,6 @@
 
 #include "Inputs.hh"
 #include "Character.hh"
-#include "BoxCollider.hh"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -24,7 +23,7 @@ int main()
     sf::Event event;
 
     //physics declaration
-    b2Vec2* gravity{new b2Vec2(0.f, 9.8f)};
+    b2Vec2* gravity{new b2Vec2(0.f, 0.f)};
     b2World* world{new b2World(*gravity)}; 
 
     sf::Clock* clock{new sf::Clock()};
@@ -88,7 +87,8 @@ int main()
     treasureSprite->setPosition(400, 400);
 
     BoxCollider* treasureCollider = new BoxCollider(300, 250, new sf::Color(0, 255, 0, 255), 16, 16,
-    new Rigidbody(world, b2BodyType::b2_staticBody, new b2Vec2(400, 400), tileBaseWidth / 2, tileBaseHeight / 2, 1, 0, 0));
+    new Rigidbody(world, b2BodyType::b2_staticBody, new b2Vec2(400, 400), tileBaseWidth / 2, tileBaseHeight / 2, 1, 0, 0),
+    treasureSprite);
 
     treasureCollider->GetBoxShape()->setScale(SPRITE_SCALE, SPRITE_SCALE);
 
@@ -175,7 +175,7 @@ int main()
     }
 
     //Main player
-    Character* character1{new Character(tilesTexture2, 16 * 1, 16 * 5, 16, 16, SPRITE_SCALE, SPRITE_SCALE)};
+    Character* character1{new Character(tilesTexture2, 16 * 1, 16 * 5, 16, 16, SPRITE_SCALE, SPRITE_SCALE, world)};
     character1->SetAnimations(
         new Animation*[2]
         {
@@ -186,9 +186,10 @@ int main()
 
     character1->GetSprite()->setPosition(400, 300);
 
-    BoxCollider* character1Collider = new BoxCollider(400, 300, new sf::Color(0, 255, 0, 255), 16, 16,
-    new Rigidbody(world, b2BodyType::b2_dynamicBody, new b2Vec2(400, 300), tileBaseWidth / 2, tileBaseHeight / 2, 1, 0, 0));
-    character1Collider->GetBoxShape()->setScale(SPRITE_SCALE, SPRITE_SCALE);
+    /*BoxCollider* character1Collider = new BoxCollider(400, 300, new sf::Color(0, 255, 0, 255), 16, 16,
+    new Rigidbody(world, b2BodyType::b2_dynamicBody, new b2Vec2(400, 300), tileBaseWidth / 2, tileBaseHeight / 2, 1, 0, 0),
+    character1->GetSprite());
+    character1Collider->GetBoxShape()->setScale(SPRITE_SCALE, SPRITE_SCALE);*/
 
 
     //esto es el loop principal, mientras la ventana este abierta, esto se va ejecutar.
@@ -208,17 +209,13 @@ int main()
         Vec2* joystickAxis{inputs->GetJoystickAxis()};
    
         //player sigue la posicion del cuerpo de física}
-        character1Collider->UpdatePhysics();
+        //character1Collider->UpdatePhysics();
         treasureCollider->UpdatePhysics();
-
-        character1->GetSprite()->setPosition(character1Collider->GetBodyPosition().x, character1Collider->GetBodyPosition().y);
-        treasureSprite->setPosition(treasureCollider->GetBodyPosition().x, treasureCollider->GetBodyPosition().y);
 
 
         if(sf::Joystick::isConnected(0))
         {
-            //playerBody->SetLinearVelocity(*(new b2Vec2(joystickAxis->x * deltaTime * PLAYER_MOVESPEED, joystickAxis->y * deltaTime * PLAYER_MOVESPEED)));
-            //character1->GetSprite()->move(joystickAxis->x * deltaTime * PLAYER_MOVESPEED, joystickAxis->y * deltaTime * PLAYER_MOVESPEED);
+            character1->Move(new b2Vec2(joystickAxis->x * deltaTime * PLAYER_MOVESPEED, joystickAxis->y * deltaTime * PLAYER_MOVESPEED));
             character1->FlipSpriteX(joystickAxis->x);
 
             if(std::abs(joystickAxis->x) > 0 || std::abs(joystickAxis->y) > 0)
@@ -234,8 +231,7 @@ int main()
         }
         else
         {
-            //playerBody->SetLinearVelocity(*(new b2Vec2(keyboardAxis->x * deltaTime * PLAYER_MOVESPEED, keyboardAxis->y * deltaTime * PLAYER_MOVESPEED)));
-            //character1->GetSprite()->move(keyboardAxis->x * deltaTime * PLAYER_MOVESPEED, keyboardAxis->y * deltaTime * PLAYER_MOVESPEED);
+            character1->Move(new b2Vec2(keyboardAxis->x * deltaTime * PLAYER_MOVESPEED, keyboardAxis->y * deltaTime * PLAYER_MOVESPEED));
             character1->FlipSpriteX(keyboardAxis->x);
 
             if(std::abs(keyboardAxis->x) > 0 || std::abs(keyboardAxis->y) > 0)
@@ -258,10 +254,10 @@ int main()
             window->draw(mazeTile);
         }
 
-        character1Collider->GetBoxShape()->setPosition(character1->GetSprite()->getPosition());
+        //character1Collider->GetBoxShape()->setPosition(character1->GetSprite()->getPosition());
         
         window->draw(*character1->GetSprite());
-        window->draw(*character1Collider->GetBoxShape());
+        window->draw(*character1->GetCollider()->GetBoxShape());
         window->draw(*treasureSprite);
         window->draw(*treasureCollider->GetBoxShape());
         window->display(); //mostrar en pantalla lo que se va dibujar
