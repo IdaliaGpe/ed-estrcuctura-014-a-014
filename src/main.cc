@@ -1,7 +1,8 @@
 #include<iostream>
 #include <SFML/Graphics.hpp>
-#include <box2d/box2d.h>
+#include<box2d/box2d.h>
 
+#include "Maze.hh"
 #include "Inputs.hh"
 #include "Character.hh"
 
@@ -95,7 +96,6 @@ int main()
     treasureCollider->GetBoxShape()->setPosition(treasureSprite->getPosition());
 
 
-
     //w = tileWall_1_1  q = tileWall_1_2    e =  tileWall_1_3   
 
     //g = tileGround_1_4    f = tileGround_2_4  d = tileGround_3_4
@@ -104,30 +104,17 @@ int main()
 
     //x = tileGround_1_6    c = tileGround_2_6  v = tileGround_3_6
 
-    char** tiles 
-    {
-        new char*[10]
-        {
-            new char[13]{'w', 'q', 'e', 'w', 'q', 'e', 'w', 'q', 'e', 'w', 'q', 'e', 'w'},
-            new char[13]{'g', 'g', 'd', 'g', 'f', 'g', 'g', 'f', 'd', 'g', 'f', 'd', 'g'},
-            new char[13]{'g', 's', 'd', 'g', 'g', 'x', 'g', 'f', 'g', 'g', 'f', 'c', 'g'},
-            new char[13]{'g', 'g', 'd', 'g', 'g', 'd', 'g', 'g', 'd', 's', 'g', 'd', 'g'},
-            new char[13]{'z', 'g', 'g', 'g', 'g', 'z', 'g', 'g', 'd', 'g', 'g', 'x', 'g'},
-            new char[13]{'g', 'g', 'g', 'g', 'g', 'd', 'g', 'g', 'd', 'g', 'f', 'g', 'g'},
-            new char[13]{'g', 'f', 'd', 's', 'f', 'd', 'g', 'f', 'g', 'g', 'f', 'd', 'g'},
-            new char[13]{'g', 'a', 'x', 'g', 'f', 'g', 'g', 'g', 'g', 's', 'v', 'g', 'g'},
-            new char[13]{'g', 'f', 'g', 'g', 'f', 'g', 'g', 'f', 'd', 'g', 'f', 'd', 'g'},
-            new char[13]{'g', 's', 'd', 'g', 'f', 'd', 'g', 'f', 'd', 'g', 'f', 'd', 'g'}
-        }
-    };
+    unsigned int N{10}, M{13};
+    Maze* maze1{new Maze(N, M, "assets/mazes/maze1.txt")};
 
     std::vector<sf::Sprite> maze;
 
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < N; i++)
     {
-        for(int j = 0; j < 13; j++)
+        for(int j = 0; j < M; j++)
         {
-            char& tile = *(*(tiles + i) + j);
+
+            char& tile{maze1->GetTiles()[i][j]};
 
             switch (tile)
             {
