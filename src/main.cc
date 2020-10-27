@@ -60,20 +60,11 @@ int main()
 
     treasureCollider->GetBoxShape()->setPosition(treasureSprite->getPosition());
 
-
-    //w = tileWall_1_1  q = tileWall_1_2    e =  tileWall_1_3   
-
-    //g = tileGround_1_4    f = tileGround_2_4  d = tileGround_3_4
-
-    //a = tileGround_1_5    s = tileGround_2_5  z = tileGround_3_5
-
-    //x = tileGround_1_6    c = tileGround_2_6  v = tileGround_3_6
-
     unsigned int N{10}, M{13};
     Maze* maze1{new Maze(N, M, SPRITE_SCALE, 16, tilesTexture3, "assets/mazes/maze1.txt")};
 
     //Main player
-    Character* character1{new Character(tilesTexture2, 16 * 1, 16 * 5, 16, 16, SPRITE_SCALE, SPRITE_SCALE, world, window)};
+    Character* character1{new Character(tilesTexture2, 16 * 1, 16 * 5, 16, 16, SPRITE_SCALE, SPRITE_SCALE, new b2Vec2(400, 300), world, window)};
     character1->SetAnimations(
         new Animation*[2]
         {
@@ -82,7 +73,7 @@ int main()
         }
     );
 
-    character1->SetPosition(400, 300);
+    //character1->SetPosition(400, 300);
 
     //esto es el loop principal, mientras la ventana este abierta, esto se va ejecutar.
     while (window->isOpen())
@@ -156,8 +147,6 @@ int main()
         world->Step(1.f / 100 * deltaTime, 8, 8);
         clock->restart();
         
-        //std::cout << playerBody->GetPosition().x << " " << playerBody->GetPosition().y << std::endl; 
-
         //std::cout << "delta time: " << deltaTime << std::endl;
 
         delete keyboardAxis;
