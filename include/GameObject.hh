@@ -1,11 +1,12 @@
 #pragma once
+
 #include<SFML/Graphics.hpp>
 #include<box2d/box2d.h>
 #include "BoxCollider.hh"
 
 class GameObject
 {
-    private:
+    protected:
         sf::Texture* texture;
         sf::Sprite* sprite;
         float cropPosX;  
@@ -19,8 +20,16 @@ class GameObject
         float tileBaseHeight;
         sf::RenderWindow* window;
 
-        void InitSprite(b2World*&, b2Vec2*);
+        const char* tagName{"default"};
+
+        void InitSprite(b2World*&, b2Vec2*, b2BodyType);
     public:
-        GameObject(sf::Texture*&, float, float, float, float, float, float, b2Vec2*, b2World*&, sf::RenderWindow*&);
+        GameObject(sf::Texture*&, float, float, float, float, float, float, b2Vec2*, b2BodyType, b2World*&, sf::RenderWindow*&);
         ~GameObject();
+        sf::Sprite* GetSprite();
+         BoxCollider* GetCollider() const;
+        void Update();
+        void SetPosition(float, float);
+        const char* GetTagName() const;
+        void SetTagName(const char*);
 };

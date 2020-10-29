@@ -6,6 +6,8 @@
 #include "Inputs.hh"
 #include "Character.hh"
 #include "Tile.hh"
+#include "GameObject.hh"
+#include "ContactListener.hh"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -27,6 +29,7 @@ int main()
     //physics declaration
     b2Vec2* gravity{new b2Vec2(0.f, 0.f)};
     b2World* world{new b2World(*gravity)}; 
+    world->SetContactListener(new ContactListener());
 
     sf::Clock* clock{new sf::Clock()};
     float deltaTime{};
@@ -45,26 +48,12 @@ int main()
     const float tileBaseWidth{16 * SPRITE_SCALE};
     const float tileBaseHeight{16 * SPRITE_SCALE};
 
-    //Tiles
-
-    //Items
-    sf::Sprite* treasureSprite{new sf::Sprite(*tilesTexture3, *(new sf::IntRect(16 * 19, 16 * 19, 16, 16)))};
-    treasureSprite->setScale(SPRITE_SCALE, SPRITE_SCALE);
-    treasureSprite->setPosition(400, 400);
-
-    BoxCollider* treasureCollider = new BoxCollider(300, 250, new sf::Color(0, 255, 0, 255), 16, 16,
-    new Rigidbody(world, b2BodyType::b2_staticBody, new b2Vec2(400, 400), tileBaseWidth / 2, tileBaseHeight / 2, 1, 0, 0),
-    treasureSprite);
-
-    treasureCollider->GetBoxShape()->setScale(SPRITE_SCALE, SPRITE_SCALE);
-
-    treasureCollider->GetBoxShape()->setPosition(treasureSprite->getPosition());
-
     unsigned int N{10}, M{13};
     Maze* maze1{new Maze(N, M, SPRITE_SCALE, 16, tilesTexture3, "assets/mazes/maze1.txt")};
 
     //Main player
-    Character* character1{new Character(tilesTexture2, 16 * 1, 16 * 5, 16, 16, SPRITE_SCALE, SPRITE_SCALE, new b2Vec2(400, 300), world, window)};
+    Character* character1{new Character(tilesTexture2, 16 * 1, 16 * 5, 16, 16, 
+    SPRITE_SCALE, SPRITE_SCALE, new b2Vec2(400, 300), b2BodyType::b2_dynamicBody, world, window)};
     character1->SetAnimations(
         new Animation*[2]
         {
@@ -72,8 +61,11 @@ int main()
             new Animation(6, 0, 5, character1->GetSprite(), 80.f)
         }
     );
+    character1->SetTagName("player");
 
-    //character1->SetPosition(400, 300);
+    GameObject* treasure{new GameObject(tilesTexture3, 16 * 19, 16 * 19, 16, 16, 
+    SPRITE_SCALE, SPRITE_SCALE, new b2Vec2(400, 400), b2BodyType::b2_staticBody, world, window)}; 
+    treasure->SetTagName("item");
 
     //esto es el loop principal, mientras la ventana este abierta, esto se va ejecutar.
     while (window->isOpen())
@@ -90,10 +82,6 @@ int main()
         
         Vec2* keyboardAxis{inputs->GetKeyboardAxis()};
         Vec2* joystickAxis{inputs->GetJoystickAxis()};
-   
-        //player sigue la posicion del cuerpo de física}
-        treasureCollider->UpdatePhysics();
-
 
         if(sf::Joystick::isConnected(0))
         {
@@ -128,7 +116,6 @@ int main()
             }
         }
 
-
         window->clear(*(new sf::Color(150, 100, 0, 255)));//lipiar la pantalla
 
         for(auto& mazeTile : *maze1->GetContainer())
@@ -137,8 +124,7 @@ int main()
         }
 
         character1->Update();
-        window->draw(*treasureSprite);
-        window->draw(*treasureCollider->GetBoxShape());
+        treasure->Update();
         window->display(); //mostrar en pantalla lo que se va dibujar
 
         sf::Time timeElapsed = clock->getElapsedTime();
