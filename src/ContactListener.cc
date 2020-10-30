@@ -3,8 +3,9 @@
 #include<iostream>
 #include<cstring>
 
-ContactListener::ContactListener()
+ContactListener::ContactListener(Score*& score)
 {
+    this->score = score;
 }
 
 ContactListener::~ContactListener()
@@ -22,6 +23,7 @@ void ContactListener::BeginContact(b2Contact* contact)
         //std::cout << bodyDataA->GetTagName() << std::endl;
         //std::cout << bodyDataB->GetTagName() << std::endl;
         std::cout << "collected" << std::endl;
+        score->AddPoints(5);
     }
 }
 
