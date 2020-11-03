@@ -66,6 +66,7 @@ int main()
         }
     );
     character1->SetTagName("player");
+    //character1->SetDebug(true);
 
     GameObject* treasure{new GameObject(tilesTexture3, 16 * 19, 16 * 19, 16, 16, 
     SPRITE_SCALE, SPRITE_SCALE, new b2Vec2(400, 400), b2BodyType::b2_staticBody, world, window)}; 
