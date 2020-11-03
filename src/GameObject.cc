@@ -20,6 +20,10 @@ float cropHeight, float scaleX, float scaleY, b2Vec2* position, b2BodyType bodyT
 
 GameObject::~GameObject()
 {
+    //delete sprite;
+    boxCollider->~BoxCollider();
+    /*delete sprite;
+    delete this;*/
 }
 
 void GameObject::InitSprite(b2World*& world, b2Vec2* position, b2BodyType bodyType)

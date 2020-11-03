@@ -28,13 +28,12 @@ int main()
     //aqui vas a guardar los eventos dentro de la ventana, eje: teclado, mouse, etc.
     sf::Event event;
 
-    Score* score{new Score(FONT1, "Score ", 24, new sf::Color(255, 255, 255), window)};
+    Score* score{new Score(FONT1, "Score ", 24, new sf::Vector2f(25, 5), new sf::Color(255, 255, 255), window)};
     
 
     //physics declaration
     b2Vec2* gravity{new b2Vec2(0.f, 0.f)};
     b2World* world{new b2World(*gravity)}; 
-    world->SetContactListener(new ContactListener(score));
 
     sf::Clock* clock{new sf::Clock()};
     float deltaTime{};
@@ -71,6 +70,16 @@ int main()
     GameObject* treasure{new GameObject(tilesTexture3, 16 * 19, 16 * 19, 16, 16, 
     SPRITE_SCALE, SPRITE_SCALE, new b2Vec2(400, 400), b2BodyType::b2_staticBody, world, window)}; 
     treasure->SetTagName("item");
+    GameObject* treasure2{new GameObject(tilesTexture3, 16 * 19, 16 * 19, 16, 16, 
+    SPRITE_SCALE, SPRITE_SCALE, new b2Vec2(200, 400), b2BodyType::b2_staticBody, world, window)}; 
+    treasure2->SetTagName("item");
+
+    std::vector<GameObject*>* items{new std::vector<GameObject*>()};
+    items->push_back(treasure);
+    items->push_back(treasure2);
+
+    world->SetContactListener(new ContactListener(score, items));
+
 
     //esto es el loop principal, mientras la ventana este abierta, esto se va ejecutar.
     while (window->isOpen())
@@ -128,10 +137,15 @@ int main()
             window->draw(*mazeTile->GetSprite());
         }
 
+        character1->Update();
+        
+        for(auto& item : *items)
+        {
+            item->Update();
+        }
+
         score->Update();
 
-        character1->Update();
-        treasure->Update();
         window->display(); //mostrar en pantalla lo que se va dibujar
 
         sf::Time timeElapsed = clock->getElapsedTime();

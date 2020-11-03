@@ -2,10 +2,12 @@
 #include "GameObject.hh"
 #include<iostream>
 #include<cstring>
+#include<algorithm>
 
-ContactListener::ContactListener(Score*& score)
+ContactListener::ContactListener(Score*& score, std::vector<GameObject*>*& items)
 {
     this->score = score;
+    this->items = items;
 }
 
 ContactListener::~ContactListener()
@@ -24,6 +26,8 @@ void ContactListener::BeginContact(b2Contact* contact)
         //std::cout << bodyDataB->GetTagName() << std::endl;
         std::cout << "collected" << std::endl;
         score->AddPoints(5);
+        items->erase(std::remove(items->begin(), items->end(), bodyDataB), items->end());
+        bodyDataB->~GameObject();
     }
 }
 
