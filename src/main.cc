@@ -53,7 +53,7 @@ int main()
     const float tileBaseHeight{16 * SPRITE_SCALE};
 
     unsigned int N{10}, M{13};
-    Maze* maze1{new Maze(N, M, SPRITE_SCALE, 16, tilesTexture3, "assets/mazes/maze1.txt")};
+    Maze* maze1{new Maze(N, M, SPRITE_SCALE, 16, tilesTexture3, "assets/mazes/maze1.txt", world)};
 
     //Main player
     Character* character1{new Character(tilesTexture2, 16 * 1, 16 * 5, 16, 16, 
