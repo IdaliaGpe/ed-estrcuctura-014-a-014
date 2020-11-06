@@ -44,9 +44,9 @@ void Tile::SetPosition(float x, float y)
 
 void Tile::TurnPhysicsOn(float x, float y)
 {
-    Rigidbody* rb{new Rigidbody(world, b2BodyType::b2_staticBody, new b2Vec2(posX, posY), 
+    Rigidbody* rb{new Rigidbody(world, b2BodyType::b2_staticBody, new b2Vec2(x, y), 
     cropSize * scale / 2, cropSize * scale / 2, 1, 0, 0)};
 
-    boxCollider = new BoxCollider(posX, posY, new sf::Color(0, 255, 0, 255), cropSize, cropSize, rb, sprite);
+    boxCollider = new BoxCollider(x, y, new sf::Color(0, 255, 0, 255), cropSize, cropSize, rb, sprite);
     boxCollider->GetBoxShape()->setScale(scale, scale);
 }

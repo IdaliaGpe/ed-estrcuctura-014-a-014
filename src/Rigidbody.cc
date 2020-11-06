@@ -54,3 +54,8 @@ void Rigidbody::SetUserData(void* userData)
 {
     body->SetUserData(userData);
 }
+
+void Rigidbody::SetSensor(bool status)
+{
+    fixture->SetSensor(status);
+}

@@ -85,6 +85,7 @@ void Maze::Generate()
                 case 'v':
                     container->push_back(new Tile(cropSize * 3, cropSize * 6, scale, cropSize, texture, world));
                     container->back()->TurnPhysicsOn(cropSize * scale * j, cropSize * scale * i);
+                    //container->back()->SetTagName("door");
                     break;              
                 default:
                     break;

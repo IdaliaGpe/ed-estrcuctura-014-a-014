@@ -10,6 +10,7 @@ class Tile
         BoxCollider* boxCollider;
         b2World* world;
         float posX, posY, scale, cropSize;
+        const char* tagName{"default"};
     public:
         Tile(float, float, float, float, sf::Texture*&);
         Tile(float, float, float, float, sf::Texture*&, b2World*&);
@@ -17,5 +18,8 @@ class Tile
         void Move(float, float);
         void SetPosition(float, float);
         sf::Sprite* GetSprite() const;
+        const char* GetTagName() const;
+        void SetTagName(const char*);
         void TurnPhysicsOn(float, float);
+        void TurnPhysicsOn(float, float, bool);
 };
